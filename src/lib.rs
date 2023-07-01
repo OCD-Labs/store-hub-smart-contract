@@ -97,7 +97,7 @@ impl Contract {
 
     /// Add a new store
     pub fn create_store(&mut self, store_id: AccountId) {
-        let signer_id = env::signer_account_id();
+        let signer_id = env::predecessor_account_id();
 
         if let Some(stores_by_account_id) = &mut self.stores_by_account_id {
             let mut store_ids = stores_by_account_id.get(&signer_id).unwrap_or_else(|| {
@@ -145,7 +145,7 @@ impl Contract {
             match stores_by_account_id.get(&signer_id) {
                 Some(store_ids) => store_ids
                     .iter()
-                    .skip(0_usize)
+                    .skip(0usize)
                     .take(store_ids.len() as usize)
                     .collect(),
                 None => vec![],
@@ -161,7 +161,7 @@ impl Contract {
             match owners_per_store_id.get(&store_id) {
                 Some(owner_ids) => owner_ids
                     .iter()
-                    .skip(0_usize)
+                    .skip(0usize)
                     .take(owner_ids.len() as usize)
                     .collect(),
                 None => vec![],
