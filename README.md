@@ -6,10 +6,10 @@ Our platform leverages the power of blockchain technology to guarantee the integ
 
 ## How?
 
-- **Decentralized Identity Verification:** NEAR blockchain would used to provide a secure and decentralized way of verifying user and store identity making it safer for customers and businesses to interact.
+- **Decentralized Identity Verification:** NEAR blockchain would used to provide a secure and decentralized way of verifying user and store identity making it safer for customers and businesses to interact. 
 
-- **Cryptocurrency Payments:** Supporting cryptocurrency payments can open up new markets and provide alternatives to traditional banking systems enabling borderless transactions. This could be particularly beneficial for customers in countries with unstable currencies or limited access to banking.
+- **Cryptocurrency Payments:** Supporting cryptocurrency payments can open up new markets and provide alternatives to traditional banking systems enabling borderless transactions. This could be particularly beneficial for customers in countries with unstable currencies or limited access to banking. And with the advent of NEAR BOS, we can leverage new or existing components to accept payment beyond the NEAR blockchain.
 
-- **Tokenization of Assets:** In the context of the e-commerce platform, blockchain can be used to create tokens for physical goods. These tokens can represent ownership of the product, which can be transferred from the seller to the buyer upon purchase. This can help reduce fraud and ensure authenticity.
+- **Tokenization of Assets:** In the context of the e-commerce platform, we used the blockchain to tokenization each physical goods. These tokens would help represent each product and its ownership too, which can be transferred from the seller to the buyer upon purchase. This can help reduce fraud and ensure authenticity.
 
 - **Transparent Transaction Chains and Lifetime Tracking:** By leveraging blockchain's immutability, we can establish transparent, tamper-proof histories for products, stores, and users on our platform. This would enable tracking the lifecycle of products, including listing updates, purchases, and reviews. For stores, this can involve recording operational changes and transaction patterns, aiding customers in making informed choices and assisting owners in refining their operations.
