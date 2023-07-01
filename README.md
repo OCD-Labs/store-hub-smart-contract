@@ -8,7 +8,7 @@ Our platform leverages the power of blockchain technology to guarantee the integ
 
 - **Decentralized Identity Verification:** NEAR blockchain would used to provide a secure and decentralized way of verifying user and store identity making it safer for customers and businesses to interact. 
 
-- **Cryptocurrency Payments:** Supporting cryptocurrency payments can open up new markets and provide alternatives to traditional banking systems enabling borderless transactions. This could be particularly beneficial for customers in countries with unstable currencies or limited access to banking. And with the advent of NEAR BOS, we can leverage new or existing components to accept payment beyond the NEAR blockchain.
+- **Cryptocurrency Payments:** Supporting cryptocurrency payments can open up new markets and provide alternatives to traditional banking systems enabling borderless transactions. This could be particularly beneficial for customers in countries with unstable currencies or limited access to banking. And with the advent of NEAR BOS, we will leverage new or existing components to accept payment beyond the NEAR blockchain.
 
 - **Tokenization of Assets:** In the context of the e-commerce platform, we used the blockchain to tokenization each physical goods. These tokens would help represent each product and its ownership too, which can be transferred from the seller to the buyer upon purchase. This can help reduce fraud and ensure authenticity.
 
