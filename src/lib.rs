@@ -4,12 +4,12 @@ use near_sdk::json_types::U128;
 
 use near_sdk::borsh::{self, BorshDeserialize, BorshSerialize};
 use near_sdk::collections::{LookupMap, TreeMap, UnorderedMap, UnorderedSet};
+use near_sdk::serde::{Deserialize, Serialize};
 use near_sdk::{
     self, env, near_bindgen, require, AccountId, BorshStorageKey, IntoStorageKey, PanicOnDefault,
     Promise,
 };
 use serde_json::json;
-use near_sdk::serde::{Deserialize, Serialize};
 
 // every item metadata will have a unique ID which is `STOREID + DELIMITER + ITEM_ID`
 static DELIMETER: &str = ".";
@@ -21,8 +21,7 @@ pub type StoreAndItemIds = String;
 
 // Defines each item details
 #[near_bindgen]
-#[derive(Serialize, Deserialize)]
-#[derive(BorshDeserialize, BorshSerialize)]
+#[derive(Serialize, Deserialize, BorshDeserialize, BorshSerialize)]
 pub struct ItemMetadata {
     pub name: String,
     pub price: U128,
@@ -32,8 +31,7 @@ pub struct ItemMetadata {
 
 // Defines action-driven event on each store
 #[near_bindgen]
-#[derive(Serialize, Deserialize)]
-#[derive(BorshDeserialize, BorshSerialize)]
+#[derive(Serialize, Deserialize, BorshDeserialize, BorshSerialize)]
 pub struct Log {
     pub id: String,
     pub timestamp: u64,
@@ -147,9 +145,8 @@ impl Contract {
             match stores_by_account_id.get(&signer_id) {
                 Some(store_ids) => store_ids
                     .iter()
-                    .skip(0 as usize)
+                    .skip(0_usize)
                     .take(store_ids.len() as usize)
-                    .map(|store_id| store_id)
                     .collect(),
                 None => vec![],
             }
@@ -164,9 +161,8 @@ impl Contract {
             match owners_per_store_id.get(&store_id) {
                 Some(owner_ids) => owner_ids
                     .iter()
-                    .skip(0 as usize)
+                    .skip(0_usize)
                     .take(owner_ids.len() as usize)
-                    .map(|owner_id| owner_id)
                     .collect(),
                 None => vec![],
             }
@@ -184,7 +180,7 @@ impl Contract {
             .get(&store_and_item_id)
     }
 
-    /// Add a new item and its metadata to an existing store 
+    /// Add a new item and its metadata to an existing store
     pub fn add_store_item(
         &mut self,
         item_id: String,
@@ -256,7 +252,7 @@ impl Contract {
                     Promise::new(metadata.owner.clone()).transfer(deposit);
                     metadata.owner = signer_id.clone();
 
-                    by_id.insert(&storeanditem_id, &metadata);
+                    by_id.insert(&storeanditem_id, metadata);
 
                     Some(())
                 } else {
@@ -318,21 +314,19 @@ impl Contract {
 
     /// Retrieve a log by id
     pub fn get_log(&self, log_id: String) -> Log {
-        match self.audit_logs.iter()
-        .find(|log| log.id == log_id) {
+        match self.audit_logs.iter().find(|log| log.id == log_id) {
             Some(log) => log,
             None => {
                 let msg = format!("No log found with id {}", log_id);
                 env::panic_str(&msg)
-            },
+            }
         }
     }
-    
+
     /// Check if payment method exists
     pub fn is_ft_approved(&self, ft_account_id: AccountId) -> bool {
         self.approved_ft_token_ids.contains(&ft_account_id)
     }
-    
 }
 
 pub fn test_account() -> AccountId {
@@ -463,9 +457,7 @@ mod tests {
     #[should_panic(expected = "StoreHub: can't buy owned item")]
     fn test_buy_owned_item() {
         let mut context = VMContextBuilder::new();
-        testing_env!(context
-            .signer_account_id(accounts(1))
-            .build());
+        testing_env!(context.signer_account_id(accounts(1)).build());
 
         let mut contract = Contract::new(accounts(0));
         contract.create_store(accounts(2));
