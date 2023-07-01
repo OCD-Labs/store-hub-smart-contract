@@ -1,1 +1,1 @@
-# store-hub-smart-contract
+# Store Hub — Smart contract
