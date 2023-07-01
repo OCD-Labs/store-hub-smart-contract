@@ -1,0 +1,1 @@
+near call $NFT_CONTRACT_ID create_store '{"store_id": "'$STORE_ID'"}' --accountId $STORE_ID

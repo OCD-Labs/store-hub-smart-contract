@@ -1,0 +1,1 @@
+near call $NFT_CONTRACT_ID add_transaction '{"action": "String", "actor": "String", "entity": "String", "extra": "String"}' --accountId $BUYER_ID

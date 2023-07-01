@@ -1,0 +1,1 @@
+near call $NFT_CONTRACT_ID add_store_item '{"item_id": "xxx", "store_id": "'$STORE_ID'", "item_name": "xxx", "item_price": "1122", "item_img_url": "http"}' --accountId $STORE_OWNER_ID
