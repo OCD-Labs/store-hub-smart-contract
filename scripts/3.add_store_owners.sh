@@ -1,0 +1,1 @@
+near call $NFT_CONTRACT_ID add_store_owners '{"store_id": "'$STORE_ID'", "owner_id": "'$NEW_OWNER_ID'"}' --accountId $STORE_ID

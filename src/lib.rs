@@ -107,7 +107,7 @@ impl Contract {
         }
     }
 
-    pub fn add_store_owners(&mut self, store_id: AccountId, owner_id: AccountId) {
+    pub fn add_store_owners(&mut self, store_id: AccountId, new_owner_id: AccountId) {
         if let Some(owners_per_store_id) = &mut self.owners_per_store_id {
             let mut owner_ids = owners_per_store_id.get(&store_id).unwrap_or_else(|| {
                 UnorderedSet::new(StorageKey::OwnersByStoreIdInner {
@@ -125,7 +125,7 @@ impl Contract {
                 };
             }
 
-            owner_ids.insert(&owner_id);
+            owner_ids.insert(&new_owner_id);
             owners_per_store_id.insert(&store_id, &owner_ids);
         }
     }
@@ -248,6 +248,7 @@ impl Contract {
     }
 
     pub fn add_ft(&mut self, ft_account_id: AccountId) {
+        require!(env::signer_account_id().eq(&self.overseer_id), "StoreHub: access denied");
         self.approved_ft_token_ids.insert(&ft_account_id);
     }
 }
