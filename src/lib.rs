@@ -5,8 +5,9 @@ use near_sdk::json_types::U128;
 use near_sdk::borsh::{self, BorshDeserialize, BorshSerialize};
 use near_sdk::collections::{LookupMap, TreeMap, UnorderedMap, UnorderedSet};
 use near_sdk::{
-    self, env, near_bindgen, AccountId, BorshStorageKey, IntoStorageKey, PanicOnDefault,
+    self, env, near_bindgen, AccountId, BorshStorageKey, IntoStorageKey, PanicOnDefault, require, Promise,
 };
+use serde_json::json;
 
 //every transaction will have a unique ID which is `STOREID + DELIMITER + ITEM_ID`
 static DELIMETER: &str = ".";
@@ -24,6 +25,16 @@ pub struct ItemMetadata {
     pub owner: AccountId,
 }
 
+#[derive(BorshDeserialize, BorshSerialize)]
+pub struct Log {
+    pub id: String,
+    pub timestamp: u64,
+    pub action: String,
+    pub actor: String,
+    pub entity: String,
+    pub extra: String,
+}
+
 /// Helper structure for storage keys of the persistent collections.
 #[derive(BorshStorageKey, BorshSerialize)]
 pub enum StorageKey {
@@ -35,6 +46,7 @@ pub enum StorageKey {
     TransactionsByStoreAndItemIds,
     FungibleTokenIds,
     StoresPerOwnerInner,
+    AuditLogs
 }
 
 #[near_bindgen]
@@ -45,6 +57,7 @@ pub struct Contract {
     pub owners_per_store_id: Option<LookupMap<StoreId, UnorderedSet<AccountId>>>,
     pub item_by_store_id: TreeMap<ItemId, StoreId>,
     pub metadata_by_storeanditem_ids: Option<UnorderedMap<StoreAndItemIds, ItemMetadata>>,
+    pub audit_logs: UnorderedSet<Log>,
     pub approved_ft_token_ids: UnorderedSet<AccountId>,
 }
 
@@ -65,6 +78,7 @@ impl Contract {
             metadata_by_storeanditem_ids: Some(UnorderedMap::new(
                 StorageKey::TransactionsByStoreAndItemIds.into_storage_key(),
             )),
+            audit_logs: UnorderedSet::new(StorageKey::AuditLogs.into_storage_key()),
             approved_ft_token_ids: UnorderedSet::new(
                 StorageKey::FungibleTokenIds.into_storage_key(),
             ),
@@ -185,7 +199,56 @@ impl Contract {
             }
         }
 
-        "".to_string()
+        let storeanditem_id = format!("{}{}{}", store_id, DELIMETER, item_id);
+        let signer_id = env::predecessor_account_id();
+        let deposit = env::attached_deposit();
+
+        self.metadata_by_storeanditem_ids.as_mut().and_then({|by_id| {
+            if let Some(metadata)= &mut by_id.get(&storeanditem_id) {
+                require!(deposit >= metadata.price.0, "StoreHub: deposit is below price");
+                require!(signer_id.ne(&metadata.owner), "StoreHub: can't buy owned item");
+
+                Promise::new(metadata.owner.clone()).transfer(deposit);
+                metadata.owner = signer_id.clone();
+                
+                by_id.insert(&storeanditem_id, &metadata);
+
+                Some(())
+            } else {
+                None
+            }
+        }});
+
+        let extra = json!({
+            "paid": deposit,
+            "previous_owner": store_id,
+        });
+        let tx_id = self.add_transaction("buy".to_string(), signer_id.to_string(), storeanditem_id, extra.to_string());
+
+        json!({
+            "message": "your purchase is ready",
+            "transaction_id": tx_id,
+        }).to_string()
+    }
+
+    pub fn add_transaction(&mut self, action: String, actor: String, entity: String, extra: String) -> String {
+        let log_id = format!("{}{}{}", entity, DELIMETER, env::block_timestamp());
+        let log = Log {
+            id: log_id.clone(),
+            timestamp: env::block_timestamp(),
+            action,
+            actor,
+            entity,
+            extra,
+        };
+
+        self.audit_logs.insert(&log);
+
+        log_id
+    }
+
+    pub fn add_ft(&mut self, ft_account_id: AccountId) {
+        self.approved_ft_token_ids.insert(&ft_account_id);
     }
 }
 
