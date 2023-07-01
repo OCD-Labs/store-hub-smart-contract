@@ -1,0 +1,1 @@
+near call $NFT_CONTRACT_ID new '{"overseer_id": "'$OVERSEER_ID'"}' --accountId $SIGNER

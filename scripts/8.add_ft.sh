@@ -1,0 +1,1 @@
+near call $NFT_CONTRACT_ID add_ft '{"ft_account_id": "'$FT_ACCOUNT_ID'"}' --accountId $BUYER_ID
