@@ -6,4 +6,8 @@ build:
 test:
 	cargo test
 
-.PHONY: build test
+dev-deploy:
+	rm -rf ./neardev
+	near dev-deploy ./out/main.wasm new '{"overseer_id": "storehub.testnet"}'
+
+.PHONY: build test dev-deploy
