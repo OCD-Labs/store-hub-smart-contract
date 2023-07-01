@@ -47,7 +47,7 @@ impl Contract {
     #[init]
     pub fn new(overseer_id: AccountId) -> Self {
         Self {
-            overseer_id: overseer_id,
+            overseer_id,
             stores_by_account_id: Some(LookupMap::new(
                 StorageKey::StoresByAccountId.into_storage_key(),
             )),
@@ -77,6 +77,7 @@ impl Contract {
         }
     }
 
+    /// Retrieve a stores owned by signer_id
     pub fn get_stores_by_account_id(&self) -> Vec<AccountId> {
         let signer_id = env::predecessor_account_id();
 
@@ -95,6 +96,8 @@ impl Contract {
         }
     }
 
+    /// Transfers assest across buyer and the store_id, 
+    /// creating a transaction item in the process
     pub fn buy(&mut self) -> String {
         "".to_string()
     }
